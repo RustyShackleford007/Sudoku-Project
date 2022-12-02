@@ -1,4 +1,4 @@
-import math,random
+import math, random
 
 """
 This was adapted from a GeeksforGeeks article "Program for Sudoku Generator" by Aarti_Rathi and Ankur Trisal
@@ -23,8 +23,10 @@ class SudokuGenerator:
 	None
     '''
     def __init__(self, row_length, removed_cells):
-        pass
-
+        self.row_length = row_length
+        self.removed_cells = removed_cells
+        self.board = self.get_board()
+        self.box_length = math.sqrt(row_length)
     '''
 	Returns a 2D python list of numbers which represents the board
 
@@ -32,8 +34,8 @@ class SudokuGenerator:
 	Return: list[list]
     '''
     def get_board(self):
-        pass
-
+        list = [[0 for j in range(9)] for i in range(9)]
+        return list
     '''
 	Displays the board to the console
     This is not strictly required, but it may be useful for debugging purposes
@@ -42,7 +44,9 @@ class SudokuGenerator:
 	Return: None
     '''
     def print_board(self):
-        pass
+        for x in self.board:
+            print(*x, sep="")
+
 
     '''
 	Determines if num is contained in the specified row (horizontal) of the board
@@ -55,7 +59,11 @@ class SudokuGenerator:
 	Return: boolean
     '''
     def valid_in_row(self, row, num):
-        pass
+        for a in range(0, 9):
+            if self.board[row][a] == num:
+                return False
+        return True
+
 
     '''
 	Determines if num is contained in the specified column (vertical) of the board
@@ -68,7 +76,10 @@ class SudokuGenerator:
 	Return: boolean
     '''
     def valid_in_col(self, col, num):
-        pass
+        for a in range(0, 9):
+            if self.board[a][col] == num:
+                return False
+        return True
 
     '''
 	Determines if num is contained in the 3x3 box specified on the board
