@@ -9,7 +9,7 @@ class Button():
 
     BUTTON_COLOR = (147, 226, 146)
 
-    def __init__(self, x, y, width, text):
+    def __init__(self, x, y, width, text=""):
         self.x = x
         self.y = y
         self.width = width
@@ -38,3 +38,7 @@ class Button():
             clicked = False
 
         return action
+
+    def click(self, surface):
+        global clicked
+
