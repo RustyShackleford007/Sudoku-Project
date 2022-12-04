@@ -33,6 +33,14 @@ clock = pygame.time.Clock()
 refresh_buttons = True
 ok = False
 txt = ""
+bool = False
+global changed_x
+global changed_y
+global newtxt
+global booly
+booly = False
+changed_x = 0
+changed_y = 0
 
 def create_board(level):
     myBoard = sudoku_generator.generate_sudoku(9, level)
@@ -42,8 +50,16 @@ def create_board(level):
 while True:
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
+            #if event.key == pygame.K_BACKSPACE:
+                #txt = txt[:1]
+            if event.key == pygame.K_KP_ENTER:
+                board[changed_x][changed_y] = int(newtxt)
+                print("WORKED")
+                booly = True
             if event.key == pygame.K_BACKSPACE:
-                txt = txt[:1]
+                board[changed_x][changed_y] = int(newtxt)
+                print("WORKED")
+                booly = True
             else:
                 txt += event.unicode
         if event.type == pygame.QUIT:
@@ -127,12 +143,21 @@ while True:
                         #pygame.draw.rect(screen, (0, 0, 0), rectangle)
                         #pygame.draw.rect(screen, (0, 23, 0), rectangle)
                         if len(txt) != 0:
-                            txt_surface = font.render(txt, True, (72, 72, 72))
-                            screen.blit(txt_surface, (300, 300))
+                            newtxt = txt
+                            bool = True
+                            txt_surface = font.render(newtxt, True, (72, 72, 72))
+                            x1 = x_val
+                            y1 = y_val1
                             if len(txt) != 0:
-                                new_a = x_val2
-                                board[a][b] = int(txt)
+                                changed_x = (x_val2 - 15) // (600 // 9)
+                                changed_y = (y_val2 - 15) // (530 // 9)
+                        if bool:
+                            screen.blit(txt_surface, (x1 + 10, y1 + 10))
                         txt = ""
+                        if booly:
+                            bool = False
+                            txt = ""
+
     clock.tick(60)
 
 
