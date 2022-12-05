@@ -32,12 +32,15 @@ hard_button = button.Button(420, 450, 80, "hard")
 clock = pygame.time.Clock()
 refresh_buttons = True
 ok = False
+global newtxt
+global txt
 txt = ""
+newtxt = ""
 bool = False
 global changed_x
 global changed_y
-global newtxt
 global booly
+
 booly = False
 changed_x = 0
 changed_y = 0
@@ -60,6 +63,7 @@ while True:
                 board[changed_x][changed_y] = int(newtxt)
                 print("WORKED")
                 booly = True
+                txt = ""
             else:
                 txt += event.unicode
         if event.type == pygame.QUIT:
@@ -151,7 +155,7 @@ while True:
                             if len(txt) != 0:
                                 changed_x = (x_val2 - 15) // (600 // 9)
                                 changed_y = (y_val2 - 15) // (530 // 9)
-                        if bool:
+                        if bool:# and len(txt) != 0:
                             screen.blit(txt_surface, (x1 + 10, y1 + 10))
                         txt = ""
                         if booly:
