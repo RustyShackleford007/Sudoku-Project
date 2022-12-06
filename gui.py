@@ -1,19 +1,20 @@
+#import statements
 import pygame
 import button
 import sudoku_generator
-
+#initialize all components
 pygame.init()
-
+#set basic parameters
 SCREEN_HEIGHT = 600
 SCREEN_LENGTH = 600
 BACKGROUND_COLOR = (159, 159, 159)
 TEXT_COLOR = (48, 48, 48)
-
+#make display
 pygame.display.set_caption("Sudoku")
-
+#make screen
 screen = pygame.display.set_mode((SCREEN_HEIGHT, SCREEN_LENGTH))
 screen.fill(BACKGROUND_COLOR)
-
+#set up fonts and text boxes
 font = pygame.font.Font(None, 32)
 easy_text = font.render("EASY", True, TEXT_COLOR, (147, 226, 146))
 med_text = font.render("MEDIUM", True, TEXT_COLOR, (147, 226, 146))
@@ -23,7 +24,7 @@ welcome_text = font.render("SELECT A GAME MODE", True, TEXT_COLOR, BACKGROUND_CO
 font = pygame.font.Font(None, 175)
 title = font.render("SUDOKU", True, (0, 0, 0), BACKGROUND_COLOR)
 font = pygame.font.Font(None, 35)
-
+#make buttons
 easy_button = button.Button(100, 450, 80, "easy")
 medium_button = button.Button(250, 450, 100, "medium")
 hard_button = button.Button(420, 450, 80, "hard")
@@ -31,7 +32,7 @@ exit = button.Button(200, 400, 200, "exit")
 exit2 = button.Button(100, 540, 100, "exit")
 restart2 = button.Button(270, 540, 80, "restart")
 reset2 = button.Button(420, 540, 80, "reset")
-
+#set variables
 clock = pygame.time.Clock()
 refresh_buttons = True
 runny = True
@@ -51,16 +52,15 @@ copyBoard = [[0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0,
 booly = False
 changed_x = 0
 changed_y = 0
-
+#main loop
 run = True
 while run:
     if not runny:
         screen.fill(BACKGROUND_COLOR)
     runny = True
+    #event loop
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
-            #if event.key == pygame.K_BACKSPACE:
-                #txt = txt[:1]
             if event.key == pygame.K_KP_ENTER:
                 board[changed_x][changed_y] = int(newtxt)
                 print("WORKED")
@@ -74,10 +74,11 @@ while run:
                 txt += event.unicode
         if event.type == pygame.QUIT:
             pygame.quit()
-
+    #if first page is needed
     if refresh_buttons:
+        #if easy button is pressed
         if easy_button.draw(screen):
-            sudoku = sudoku_generator.SudokuGenerator(9, 1)
+            sudoku = sudoku_generator.SudokuGenerator(9, 30)
             sudoku.fill_values()
             board = sudoku.get_board()
             sudoku.remove_cells()
@@ -87,6 +88,7 @@ while run:
             for a in range(9):
                 for b in range(9):
                     copyBoard[a][b] = board[a][b]
+        #if medium button is pressed
         if medium_button.draw(screen):
             sudoku = sudoku_generator.SudokuGenerator(9, 40)
             sudoku.fill_values()
@@ -98,30 +100,34 @@ while run:
             for a in range(9):
                 for b in range(9):
                     copyBoard[a][b] = board[a][b]
+        #if hard button is pressed
         if hard_button.draw(screen):
-            sudoku = sudoku_generator.SudokuGenerator(9, 15)
+            sudoku = sudoku_generator.SudokuGenerator(9, 50)
             sudoku.fill_values()
             board = sudoku.get_board()
             sudoku.remove_cells()
             board = sudoku.get_board()
             screen.fill(BACKGROUND_COLOR)
             refresh_buttons = False
+            #make board copy for resetting
             for a in range(9):
                 for b in range(9):
                     copyBoard[a][b] = board[a][b]
-
+    #buttons displayed
     if refresh_buttons:
         screen.blit(easy_text, (110, 460))
         screen.blit(med_text, (256, 460))
         screen.blit(hard_text, (428, 460))
         screen.blit(welcome_text, (102, 300))
         screen.blit(title, (40, 100))
+    #draw lines
     else:
         screen.fill(BACKGROUND_COLOR)
         pygame.draw.line(screen, (0, 0, 0), (598, 0), (598, 600), 4)
         pygame.draw.line(screen, (0, 0, 0), (0, 0), (0, 600), 4)
         pygame.draw.line(screen, (0, 0, 0), (0, 530), (600, 530), 4)
         pygame.draw.line(screen, (0, 0, 0), (0, 597), (600, 597), 4)
+        #draw lines
         for x in range(601):
             if x % 67 == 0:
                 if x % 201 == 0:
@@ -134,12 +140,15 @@ while run:
                     pygame.draw.line(screen, (0, 0, 0), (0, x), (600, x), 4)
                 else:
                     pygame.draw.line(screen, (0, 0, 0), (0, x), (600, x), 2)
+        #cycle through board
         for a in range(9):
             for b in range(9):
+                #display numbers not 0
                 if board[a][b] != 0:
                     font = pygame.font.Font(None, 50)
                     text = font.render(str(board[a][b]), True, (0, 0, 0), BACKGROUND_COLOR)
                     screen.blit(text, ((600 // 18) + (600 // 18) * 2 * a - 5, (530 // 18) + (530 // 18) * 2 * b - 10))
+                    #buttons during game
                     if reset2.draw(screen):
                         for abe in range(9):
                             for luca in range(9):
@@ -157,6 +166,7 @@ while run:
                     screen.blit(restart_text, (105, 552))
                     screen.blit(exit_text, (290, 552))
                     screen.blit(reset_text, (428, 552))
+                #display zeroes
                 else:
                     Rect = pygame.Rect
                     square = Rect((600 // 18) + (600 // 18) * 2 * a - 26, (530 // 18) + (530 // 18) * 2 * b - 23,
@@ -181,6 +191,7 @@ while run:
                             x_val2 = 598
                         ok = True
                     if ok:
+                        #draw red lines around selected
                         pygame.draw.line(screen, (255, 0, 0), (x_val, y_val1), (x_val, y_val2), 4)
                         pygame.draw.line(screen, (255, 0, 0), (x_val, y_val2), (x_val2, y_val2), 4)
                         pygame.draw.line(screen, (255, 0, 0), (x_val, y_val1), (x_val2, y_val1), 4)
@@ -202,11 +213,13 @@ while run:
                             txt = ""
         won = False
         def checkWin():
+            #check if board is right
             for a in range(9):
                 for b in range(9):
                     if board[a][b] != sudoku.solved_board[a][b]:
                         return False
             return True
+        #check if board is full
         def checkIfFull():
             for a in range(9):
                 for b in range(9):
@@ -215,6 +228,7 @@ while run:
             return True
 
         win_message = ""
+        #if they win
         if checkWin():
             screen.fill(BACKGROUND_COLOR)
             font = pygame.font.Font(None, 150)
@@ -230,6 +244,7 @@ while run:
             rectangly = Rect(exit.x, exit.y, exit.width, exit.height)
             if rectangly.collidepoint(pos) and pygame.mouse.get_pressed()[0]:
                 run = False
+        #check if they lose
         if not checkWin() and checkIfFull():
             screen.fill(BACKGROUND_COLOR)
             font = pygame.font.Font(None, 150)
@@ -245,9 +260,7 @@ while run:
             if rectangly.collidepoint(pos) and pygame.mouse.get_pressed()[0]:
                 refresh_buttons = True
                 screen.fill(BACKGROUND_COLOR)
+    #set 20 FPS
     clock.tick(20)
-
-
-
-
+    #update the display
     pygame.display.update()

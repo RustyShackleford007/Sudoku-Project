@@ -4,17 +4,16 @@ pygame.init()
 clicked = False
 
 class Button():
-
+    #set default values
     height = 40
-
     BUTTON_COLOR = (147, 226, 146)
-
+    #make constructor
     def __init__(self, x, y, width, text=""):
         self.x = x
         self.y = y
         self.width = width
         self.text = text
-
+    #draws the button on the surface
     def draw(self, surface):
         global clicked
 
@@ -29,16 +28,14 @@ class Button():
 
         action = False
         pos = pygame.mouse.get_pos()
-
+        #detects mouse over and click
         if button_rect.collidepoint(pos) and pygame.mouse.get_pressed()[0] and clicked == False:
             clicked = True
             action = True
 
         if pygame.mouse.get_pressed()[0] == 0:
             clicked = False
-
+        #returns that button was activated
         return action
 
-    def click(self, surface):
-        global clicked
 
