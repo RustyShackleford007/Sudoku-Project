@@ -27,6 +27,7 @@ class SudokuGenerator:
         self.removed_cells = removed_cells
         self.board = [[0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0]]
         self.box_length = 3
+        self.solved_board = [[0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0]]
     '''
 	Returns a 2D python list of numbers which represents the board
 
@@ -219,6 +220,9 @@ class SudokuGenerator:
     '''
     def remove_cells(self):
         removed = []
+        for a in range(9):
+            for b in range(9):
+                self.solved_board[a][b] = self.board[a][b]
         for a in range(self.removed_cells):
             x = random.randint(0, 8)
             y = random.randint(0, 8)

@@ -23,14 +23,18 @@ welcome_text = font.render("SELECT A GAME MODE", True, TEXT_COLOR, BACKGROUND_CO
 font = pygame.font.Font(None, 175)
 title = font.render("SUDOKU", True, (0, 0, 0), BACKGROUND_COLOR)
 font = pygame.font.Font(None, 35)
-print(title.get_width())
 
 easy_button = button.Button(100, 450, 80, "easy")
 medium_button = button.Button(250, 450, 100, "medium")
 hard_button = button.Button(420, 450, 80, "hard")
+exit = button.Button(200, 400, 200, "exit")
+exit2 = button.Button(100, 540, 100, "exit")
+restart2 = button.Button(270, 540, 80, "restart")
+reset2 = button.Button(420, 540, 80, "reset")
 
 clock = pygame.time.Clock()
 refresh_buttons = True
+runny = True
 ok = False
 global newtxt
 global txt
@@ -40,17 +44,19 @@ bool = False
 global changed_x
 global changed_y
 global booly
+list = []
+copyBoard = [[0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0]]
+
 
 booly = False
 changed_x = 0
 changed_y = 0
 
-def create_board(level):
-    myBoard = sudoku_generator.generate_sudoku(9, level)
-    return myBoard
-
-
-while True:
+run = True
+while run:
+    if not runny:
+        screen.fill(BACKGROUND_COLOR)
+    runny = True
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
             #if event.key == pygame.K_BACKSPACE:
@@ -71,17 +77,38 @@ while True:
 
     if refresh_buttons:
         if easy_button.draw(screen):
-            board = create_board(30)
+            sudoku = sudoku_generator.SudokuGenerator(9, 1)
+            sudoku.fill_values()
+            board = sudoku.get_board()
+            sudoku.remove_cells()
+            board = sudoku.get_board()
             screen.fill(BACKGROUND_COLOR)
             refresh_buttons = False
+            for a in range(9):
+                for b in range(9):
+                    copyBoard[a][b] = board[a][b]
         if medium_button.draw(screen):
-            board = create_board(40)
+            sudoku = sudoku_generator.SudokuGenerator(9, 40)
+            sudoku.fill_values()
+            board = sudoku.get_board()
+            sudoku.remove_cells()
+            board = sudoku.get_board()
             screen.fill(BACKGROUND_COLOR)
             refresh_buttons = False
+            for a in range(9):
+                for b in range(9):
+                    copyBoard[a][b] = board[a][b]
         if hard_button.draw(screen):
-            board = create_board(50)
+            sudoku = sudoku_generator.SudokuGenerator(9, 15)
+            sudoku.fill_values()
+            board = sudoku.get_board()
+            sudoku.remove_cells()
+            board = sudoku.get_board()
             screen.fill(BACKGROUND_COLOR)
             refresh_buttons = False
+            for a in range(9):
+                for b in range(9):
+                    copyBoard[a][b] = board[a][b]
 
     if refresh_buttons:
         screen.blit(easy_text, (110, 460))
@@ -113,16 +140,31 @@ while True:
                     font = pygame.font.Font(None, 50)
                     text = font.render(str(board[a][b]), True, (0, 0, 0), BACKGROUND_COLOR)
                     screen.blit(text, ((600 // 18) + (600 // 18) * 2 * a - 5, (530 // 18) + (530 // 18) * 2 * b - 10))
+                    if reset2.draw(screen):
+                        for abe in range(9):
+                            for luca in range(9):
+                                board[abe][luca] = copyBoard[abe][luca]
+                    if restart2.draw(screen):
+                        run = False
+                    if exit2.draw(screen):
+                        refresh_buttons = True
+                        screen.fill(BACKGROUND_COLOR)
+                        runny = False
+                    font = pygame.font.Font(None, 30)
+                    reset_text = font.render("RESET", True, (0, 0, 0), (147, 226, 146))
+                    restart_text = font.render("RESTART", True, (0, 0, 0), (147, 226, 146))
+                    exit_text = font.render("EXIT", True, (0, 0, 0), (147, 226, 146))
+                    screen.blit(restart_text, (105, 552))
+                    screen.blit(exit_text, (290, 552))
+                    screen.blit(reset_text, (428, 552))
                 else:
                     Rect = pygame.Rect
                     square = Rect((600 // 18) + (600 // 18) * 2 * a - 26, (530 // 18) + (530 // 18) * 2 * b - 23,
                                   600 // 9, 530 // 9)
-                    # pygame.draw.rect(screen, (255, 0, 0), square)
                     pos = pygame.mouse.get_pos()
                     clicked = False
                     if square.collidepoint(pos) and pygame.mouse.get_pressed()[0] and clicked == False:
                         clicked = True
-                        #pygame.draw.rect(screen, (255, 0, 0), square)
                         x_val = (600 // 18) + (600 // 18) * 2 * a - 20
                         while x_val % 67 != 0:
                             x_val -= 1
@@ -144,25 +186,66 @@ while True:
                         pygame.draw.line(screen, (255, 0, 0), (x_val, y_val1), (x_val2, y_val1), 4)
                         pygame.draw.line(screen, (255, 0, 0), (x_val2, y_val1), (x_val2, y_val2), 4)
                         rectangle = Rect(x_val, y_val1, x_val2 - x_val, y_val2 - y_val1)
-                        #pygame.draw.rect(screen, (0, 0, 0), rectangle)
-                        #pygame.draw.rect(screen, (0, 23, 0), rectangle)
                         if len(txt) != 0:
                             newtxt = txt
                             bool = True
-                            txt_surface = font.render(newtxt, True, (72, 72, 72))
                             x1 = x_val
                             y1 = y_val1
-                            if len(txt) != 0:
-                                changed_x = (x_val2 - 15) // (600 // 9)
-                                changed_y = (y_val2 - 15) // (530 // 9)
-                        if bool:# and len(txt) != 0:
+                            changed_x = (x_val2 - 15) // (600 // 9)
+                            changed_y = (y_val2 - 15) // (530 // 9)
+                        if bool:
+                            txt_surface = font.render(newtxt, True, (72, 72, 72))
                             screen.blit(txt_surface, (x1 + 10, y1 + 10))
                         txt = ""
                         if booly:
                             bool = False
                             txt = ""
+        won = False
+        def checkWin():
+            for a in range(9):
+                for b in range(9):
+                    if board[a][b] != sudoku.solved_board[a][b]:
+                        return False
+            return True
+        def checkIfFull():
+            for a in range(9):
+                for b in range(9):
+                    if board[a][b] == 0:
+                        return False
+            return True
 
-    clock.tick(60)
+        win_message = ""
+        if checkWin():
+            screen.fill(BACKGROUND_COLOR)
+            font = pygame.font.Font(None, 150)
+            winner = font.render("You Won!", True, (0, 0, 0), BACKGROUND_COLOR)
+            screen.blit(winner, (70, 200))
+
+            if exit.draw(screen):
+                pass
+            font = pygame.font.Font(None, 40)
+            exit_text = font.render("EXIT", True, TEXT_COLOR, (147, 226, 146))
+            screen.blit(exit_text, (270, 408))
+            pos = pygame.mouse.get_pos()
+            rectangly = Rect(exit.x, exit.y, exit.width, exit.height)
+            if rectangly.collidepoint(pos) and pygame.mouse.get_pressed()[0]:
+                run = False
+        if not checkWin() and checkIfFull():
+            screen.fill(BACKGROUND_COLOR)
+            font = pygame.font.Font(None, 150)
+            winner = font.render("You Lost!", True, (0, 0, 0), BACKGROUND_COLOR)
+            screen.blit(winner, (70, 200))
+            if exit.draw(screen):
+                pass
+            font = pygame.font.Font(None, 40)
+            exit_text = font.render("RESTART", True, TEXT_COLOR, (147, 226, 146))
+            screen.blit(exit_text, (240, 408))
+            pos = pygame.mouse.get_pos()
+            rectangly = Rect(exit.x, exit.y, exit.width, exit.height)
+            if rectangly.collidepoint(pos) and pygame.mouse.get_pressed()[0]:
+                refresh_buttons = True
+                screen.fill(BACKGROUND_COLOR)
+    clock.tick(20)
 
 
 
